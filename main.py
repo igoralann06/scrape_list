@@ -131,7 +131,7 @@ def get_product_list(driver):
 
             try:
                 date_element = element.find_element(By.XPATH, './/small[@data-test="job-pubilshed-date"]')
-                date_posted = date_element.text.strip() + " / " + current_time
+                date_posted = date_element.text.strip()
             except:
                 date_posted = ""
 
@@ -164,6 +164,7 @@ def get_product_list(driver):
                 budget,
                 url,
                 payment_verification,
+                current_time,
                 date_posted,
                 reviews,
                 funds_spent,
@@ -187,8 +188,8 @@ if __name__ == "__main__":
     options.add_argument("--disable-software-rasterizer")
     options.add_argument("--start-maximized")  # Debugging support
     driver = uc.Chrome(options=options)
-    titleData = ["id", "title", "tech_stack_details", "job_type_label", "experience_level", "description", "duration_label", "budget", "url", "payment_verification", "date_posted", "reviews", "funds_spent", "client_location"]
-    widths = [10,100,100,100,100,100,100,100,100,100,100,100,100,100]
+    titleData = ["id", "title", "tech_stack_details", "job_type_label", "experience_level", "description", "duration_label", "budget", "url", "payment_verification", "date_posted", "time_since_posted", "reviews", "funds_spent", "client_location"]
+    widths = [10,90,90,90,90,90,90,90,90,90,90,90,90,90,90]
     style = xlwt.easyxf('font: bold 1; align: horiz center')
     
     if(not os.path.isdir("products")):
