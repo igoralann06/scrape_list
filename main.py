@@ -30,9 +30,8 @@ def is_relative_url(string):
 def get_product_list(driver):
     global section_id
     num = 1
-    # driver.get(base_url)
-    # driver.execute_script("document.body.style.zoom='80%'")
-    # time.sleep(120)
+    driver.get("https://www.upwork.com/ab/account-security/login")
+    time.sleep(50)
     page_num = input("Enter your page number: ")
 
     while(num <= int(page_num)):
@@ -50,6 +49,12 @@ def get_product_list(driver):
             hourly_rate = ""
             estimated_hours = ""
             budget = ""
+            url = ""
+            payment_verification = ""
+            date_posted = ""
+            reviews = ""
+            funds_spent = ""
+            client_location = ""
 
             driver.execute_script("arguments[0].scrollIntoView();", element)
 
@@ -101,6 +106,49 @@ def get_product_list(driver):
                     categories = categories + category_element.text.strip() + ","
             except:
                 categories = ""
+
+            try:
+                url_element = element.find_element(By.XPATH, './/a[@data-test="job-tile-title-link UpLink"]')
+                url = url_element.get_attribute("href")
+            except:
+                url = ""
+
+            try:
+                payment_element = element.find_element(By.XPATH, './/li[@data-test="payment-verified"]')
+                payment_verification = payment_element.text.strip()
+            except:
+                payment_verification = ""
+
+            try:
+                date_element = element.find_element(By.XPATH, './/small[@data-test="job-pubilshed-date"]')
+                date_posted = date_element.text.strip()
+            except:
+                date_posted = ""
+
+            try:
+                review_element = element.find_element(By.XPATH, './/span[@data-test="popper transition UpTransition UpTransitionIntro"]')
+                reviews = review_element.text.strip()
+            except:
+                reviews = ""
+
+            try:
+                total_element = element.find_element(By.XPATH, './/li[@data-test="total-spent"]')
+                funds_spent = total_element.text.strip()
+            except:
+                funds_spent = ""
+
+            try:
+                total_element = element.find_element(By.XPATH, './/li[@data-test="total-spent"]')
+                funds_spent = total_element.text.strip()
+            except:
+                funds_spent = ""
+
+            try:
+                location_element = element.find_element(By.XPATH, './/li[@data-test="location"]')
+                client_location = location_element.text.strip()
+            except:
+                client_location = ""
+
             record = [
                 str(section_id),
                 title,
@@ -109,7 +157,13 @@ def get_product_list(driver):
                 level,
                 description,
                 duration,
-                budget
+                budget,
+                url,
+                payment_verification,
+                date_posted,
+                reviews,
+                funds_spent,
+                client_location,
             ]
             
             products.append(record)
@@ -129,8 +183,8 @@ if __name__ == "__main__":
     options.add_argument("--disable-software-rasterizer")
     options.add_argument("--start-maximized")  # Debugging support
     driver = uc.Chrome(options=options)
-    titleData = ["id", "title", "categories", "job_type_label", "experience_level", "description", "duration_label", "budget"]
-    widths = [10,100,100,100,100,100,100,100]
+    titleData = ["id", "title", "tech_stack_details", "job_type_label", "experience_level", "description", "duration_label", "budget", "url", "payment_verification", "date_posted", "reviews", "funds_spent", "client_location"]
+    widths = [10,100,100,100,100,100,100,100,100,100,100,100,100,100]
     style = xlwt.easyxf('font: bold 1; align: horiz center')
     
     if(not os.path.isdir("products")):
