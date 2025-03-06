@@ -143,7 +143,7 @@ def get_product_list(driver):
 
             try:
                 total_element = element.find_element(By.XPATH, './/li[@data-test="total-spent"]')
-                funds_spent = total_element.text.strip()
+                funds_spent = total_element.text.strip().replace("spent", "")
             except:
                 funds_spent = ""
 
@@ -152,6 +152,10 @@ def get_product_list(driver):
                 client_location = location_element.text.strip()
             except:
                 client_location = ""
+
+            if "Hourly" in work_type:
+                budget = work_type.replace("Hourly:", "")
+                work_type = "Hourly"
 
             record = [
                 str(section_id),
