@@ -29,16 +29,26 @@ def is_relative_url(string):
 
 def get_product_list(driver):
     global section_id
-    num = 1
+    
     driver.get("https://www.upwork.com/ab/account-security/login")
     time.sleep(50)
-    page_num = input("Enter your page number: ")
+    start_page = input("Enter your start page number: ")
+    end_page = input("Enter your end page number: ")
 
-    while(num <= int(page_num)):
+    if(start_page > end_page):
+        return []
+
+    num = int(start_page)
+
+    while(num <= int(end_page) and num >= int(start_page)):
         driver.get(base_url+"&page="+str(num))
         driver.execute_script("document.body.style.zoom='80%'")
         elements = driver.find_elements(By.TAG_NAME, "article")
         print(len(elements))
+
+        now = datetime.now()
+        current_time = now.strftime("%m-%d-%Y-%H-%M-%S")
+        
         for element in elements:
             title = ""
             categories = ""
@@ -121,21 +131,15 @@ def get_product_list(driver):
 
             try:
                 date_element = element.find_element(By.XPATH, './/small[@data-test="job-pubilshed-date"]')
-                date_posted = date_element.text.strip()
+                date_posted = date_element.text.strip() + " / " + current_time
             except:
                 date_posted = ""
 
             try:
-                review_element = element.find_element(By.XPATH, './/span[@data-test="popper transition UpTransition UpTransitionIntro"]')
+                review_element = element.find_element(By.XPATH, './/div[@data-test="feedback-rating UpCRating"]')
                 reviews = review_element.text.strip()
             except:
                 reviews = ""
-
-            try:
-                total_element = element.find_element(By.XPATH, './/li[@data-test="total-spent"]')
-                funds_spent = total_element.text.strip()
-            except:
-                funds_spent = ""
 
             try:
                 total_element = element.find_element(By.XPATH, './/li[@data-test="total-spent"]')
